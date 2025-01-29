@@ -1,0 +1,33 @@
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_profile_service
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+  profiles:
+    active: dev
+
+  jpa:
+    hibernate:
+      ddl-auto: validate # Не создавать таблицы автоматически (используем Liquibase)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  jwt:
+    secret: your-secret-key
+    expiration: 86400000 # 24 часа в миллисекундах
+
+logging:
+  level:
+    root: INFO
+    web: DEBUG
