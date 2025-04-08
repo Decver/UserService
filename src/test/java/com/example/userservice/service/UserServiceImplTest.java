@@ -5,6 +5,7 @@ import com.example.userservice.dto.response.UserResponse;
 import com.example.userservice.model.User;
 import com.example.userservice.repository.UserRepository;
 import com.example.userservice.security.JwtTokenProvider;
+import com.example.userservice.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-class UserServiceTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -31,7 +32,7 @@ class UserServiceTest {
     private JwtTokenProvider jwtTokenProvider;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @BeforeEach
     void setUp() {
@@ -48,7 +49,7 @@ class UserServiceTest {
 
         User user = new User();
         user.setId(UUID.randomUUID());
-        user.setUsername("testuser");
+        user.setUserName("testuser");
         user.setEmail("test@example.com");
         user.setPassword("encodedPassword");
 
@@ -58,12 +59,12 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         // Act
-        UserResponse response = userService.registerUser(request);
+        UserResponse response = userServiceImpl.registerUser(request);
 
         // Assert
         assertNotNull(response);
         assertEquals(user.getId(), response.getId());
-        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getUserName(), response.getUsername());
         assertEquals(user.getEmail(), response.getEmail());
 
         verify(userRepository, times(1)).existsByUsername("testuser");
@@ -78,18 +79,18 @@ class UserServiceTest {
         UUID userId = UUID.randomUUID();
         User user = new User();
         user.setId(userId);
-        user.setUsername("testuser");
+        user.setUserName("testuser");
         user.setEmail("test@example.com");
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
         // Act
-        UserResponse response = userService.getUserById(userId);
+        UserResponse response = userServiceImpl.getUserById(userId);
 
         // Assert
         assertNotNull(response);
         assertEquals(user.getId(), response.getId());
-        assertEquals(user.getUsername(), response.getUsername());
+        assertEquals(user.getUserName(), response.getUsername());
         assertEquals(user.getEmail(), response.getEmail());
 
         verify(userRepository, times(1)).findById(userId);
@@ -102,7 +103,7 @@ class UserServiceTest {
         doNothing().when(userRepository).deleteById(userId);
 
         // Act
-        userService.deleteUser(userId);
+        userServiceImpl.deleteUser(userId);
 
         // Assert
         verify(userRepository, times(1)).deleteById(userId);

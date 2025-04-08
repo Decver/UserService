@@ -7,4 +7,5 @@
 
     <!-- Подключаем файл с миграцией для создания таблицы users -->
     <include file="db/changelog/changes/v1.0/create-users-table.xml" relativeToChangelogFile="false"/>
+    <include file="db/changelog/changes/v1.0/create-user-friends-table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

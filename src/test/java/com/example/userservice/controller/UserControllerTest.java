@@ -3,7 +3,7 @@ package com.example.userservice.controller;
 import com.example.userservice.dto.request.LoginRequest;
 import com.example.userservice.dto.request.RegisterRequest;
 import com.example.userservice.dto.response.UserResponse;
-import com.example.userservice.service.UserService;
+import com.example.userservice.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.*;
 class UserControllerTest {
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     @InjectMocks
     private UserController userController;
@@ -44,7 +44,7 @@ class UserControllerTest {
                 .email("test@example.com")
                 .build();
 
-        when(userService.registerUser(any(RegisterRequest.class))).thenReturn(userResponse);
+        when(userServiceImpl.registerUser(any(RegisterRequest.class))).thenReturn(userResponse);
 
         // Act
         ResponseEntity<UserResponse> response = userController.registerUser(request);
@@ -54,7 +54,7 @@ class UserControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(userResponse, response.getBody());
 
-        verify(userService, times(1)).registerUser(any(RegisterRequest.class));
+        verify(userServiceImpl, times(1)).registerUser(any(RegisterRequest.class));
     }
 
     @Test
@@ -66,7 +66,7 @@ class UserControllerTest {
 
         String token = "jwt-token";
 
-        when(userService.loginUser(any(LoginRequest.class))).thenReturn(token);
+        when(userServiceImpl.loginUser(any(LoginRequest.class))).thenReturn(token);
 
         // Act
         ResponseEntity<String> response = userController.loginUser(request);
@@ -76,6 +76,6 @@ class UserControllerTest {
         assertEquals(200, response.getStatusCodeValue());
         assertEquals(token, response.getBody());
 
-        verify(userService, times(1)).loginUser(any(LoginRequest.class));
+        verify(userServiceImpl, times(1)).loginUser(any(LoginRequest.class));
     }
 }
